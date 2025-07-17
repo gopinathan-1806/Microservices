@@ -1,9 +1,14 @@
 pipeline {
     agent any
 
+    parameters {
+        string(name: 'IMAGE_REPO', defaultValue: 'flask-gists-app', description: 'DockerHub Repository Name')
+        string(name: 'IMAGE_TAG', defaultValue: 'latest', description: 'Docker Image Tag')
+    }
+
     environment {
-        IMAGE_NAME = "your-dockerhub-username/flask-gists-app"
-        IMAGE_TAG = "latest"
+        IMAGE_NAME = "gopi1806/${params.IMAGE_REPO}"
+        IMAGE_TAG = "${params.IMAGE_TAG}"
     }
 
     stages {
@@ -35,7 +40,7 @@ pipeline {
 
         stage('Push to DockerHub') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'dockerhub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                withCredentials([usernamePassword(credentialsId: 'aa3bf5ae-39bd-49b8-8eb0-6045f97ae27f', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh """
                         echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                         docker push ${IMAGE_NAME}:${IMAGE_TAG}
